@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TargetConfig Name="net:port=50771,key=****" LastUsed="2024-10-15T10:44:04.4449076Z">
+  <EngineConfig />
+  <EngineOptions>
+    <Property name="InitialBreak" value="true" />
+    <Property name="Elevate" value="false" />
+  </EngineOptions>
+  <TargetOptions>
+    <Option name="KernelConnect">
+      <Property name="ConnectionString" value="net:port=50771,key=IP9G2EF7TXO.RNKXNDPAYNU4.6UZI17U7PFK.KPD76S14OWQD" />
+      <Property name="ConnectionType" value="Default" />
+      <Property name="QuietMode" value="false" />
+      <Property name="InitialBreak" value="true" />
+    </Option>
+    <Option name="RestoreCommandHistory">
+      <Property name="History">
+        <Property value=".sympath C:\Users\adam\source\repos\KMDFDriver1\x64\Debug" />
+        <Property value=".srcpath C:\Users\adam\source\repos\KMDFDriver1\KMDFDriver1" />
+        <Property value="!analyze -v" />
+        <Property value=".sympath" />
+        <Property value=".sympath " />
+        <Property value="!bp" />
+        <Property value="bp KMDFDriver1!ProcessPowerControl" />
+        <Property value="!bp KMDFDriver1!DriverEntry" />
+        <Property value=".srcpath" />
+        <Property value=".srcpath " />
+        <Property value=".srcpath C:\Users\WDKRemoteUser\Desktop\black" />
+        <Property value=".srcpath C:\Users\WDKRemoteUser\Desktop\black\" />
+        <Property value=".srcpath C:\Users\adam\source\repos\KMDFDriver1\x64\Debug\" />
+        <Property value="!bp " />
+        <Property value="bp KMDFDriver1!FindDMAAddy" />
+        <Property value="bp FindDMAAddy" />
+        <Property value="bp DriverEntry" />
+        <Property value="bp !DriverEntry" />
+        <Property value=".sympath+ C:\Users\adam\source\repos\KMDFDriver1\x64\Debug" />
+        <Property value="bp KMDFDriver!" />
+        <Property value="bp KMDFDriver!DriverEntry" />
+        <Property value="bp KMDFDriver1!DriverEntry" />
+        <Property value="bl" />
+        <Property value=".reload /f KMDFDriver1.sys" />
+        <Property value="db KMDFDriver1" />
+        <Property value="ln KMDFDriver1" />
+        <Property value="bu 0xfffff801`50bf0000" />
+        <Property value=".srcpath +C:\Users\adam\source\repos\KMDFDriver1\x64\Debug" />
+        <Property value=".srcpath C:\Users\adam\source\repos\KMDFDriver1\x64\Debug" />
+        <Property value=".symfix+ c:\symbols" />
+        <Property value=".reload" />
+        <Property value="Symbol search path is: srv*" />
+        <Property value="Expanded Symbol search path is: cache*;SRV*https://msdl.microsoft.com/download/symbols" />
+        <Property value="lm" />
+        <Property value="p" />
+        <Property value="gu" />
+        <Property value="g" />
+      </Property>
+    </Option>
+    <Option name="RestoreBreakpoints">
+      <Property name="Breakpoints">
+        <Property>
+          <Property name="IsEnabled" value="true" />
+          <Property name="Command" value="" />
+          <Property name="PassCount" value="1" />
+          <Property name="SymbolName" value="KMDFDriver1!DriverEntry" />
+          <Property name="Offset" value="0x84" />
+          <Property name="Address" value="0" />
+          <Property name="Module" value="KMDFDriver1" />
+          <Property name="Filename" value="C:\Users\adam\source\repos\KMDFDriver1\KMDFDriver1\main.c" />
+          <Property name="Line" value="204" />
+          <Property name="Type" value="Software" />
+        </Property>
+        <Property>
+          <Property name="IsEnabled" value="false" />
+          <Property name="Command" value="" />
+          <Property name="PassCount" value="1" />
+          <Property name="SymbolName" value="!DriverEntry" />
+          <Property name="Address" value="0" />
+          <Property name="Line" value="0" />
+          <Property name="Type" value="Software" />
+        </Property>
+        <Property>
+          <Property name="IsEnabled" value="false" />
+          <Property name="Command" value="" />
+          <Property name="PassCount" value="1" />
+          <Property name="SymbolName" value="KMDFDriver!DriverEntry" />
+          <Property name="Address" value="0" />
+          <Property name="Line" value="0" />
+          <Property name="Type" value="Software" />
+        </Property>
+        <Property>
+          <Property name="IsEnabled" value="true" />
+          <Property name="Command" value="" />
+          <Property name="PassCount" value="1" />
+          <Property name="SymbolName" value="KMDFDriver1!ProcessPowerControl" />
+          <Property name="Offset" value="0x16b" />
+          <Property name="Address" value="0" />
+          <Property name="Module" value="KMDFDriver1" />
+          <Property name="Filename" value="C:\Users\adam\source\repos\KMDFDriver1\KMDFDriver1\main.c" />
+          <Property name="Line" value="135" />
+          <Property name="Type" value="Software" />
+        </Property>
+      </Property>
+    </Option>
+  </TargetOptions>
+</TargetConfig>
