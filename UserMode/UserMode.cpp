@@ -15,7 +15,7 @@ Req request;
 
 
 
-void DrawPlayers(HANDLE processId, PVOID baseAddress, PVOID resolvedAddress) {
+void DrwPlayers(HANDLE processId, PVOID baseAddress, PVOID resolvedAddress) {
 	//iterate through playerlist and print each
 	//ac_client + 0x18AC04 read
 	PVOID PlayerList = (PVOID)(ac_client + 0x18AC04);
