@@ -137,3 +137,15 @@ NTSTATUS FindDMAAddy(
 
 
 
+NTSTATUS GetProcessByPid(HANDLE pid, PEPROCESS* process) {
+    if (!process) {
+        return STATUS_INVALID_PARAMETER;
+    }
+
+    NTSTATUS status = PsLookupProcessByProcessId(pid, process);
+    if (!NT_SUCCESS(status)) {
+        DbgPrint("Failed to find process by PID: %p (status: 0x%x)\n", pid, status);
+    }
+
+    return status;
+}

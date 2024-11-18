@@ -88,10 +88,12 @@ bool MemRead(ULONG Addrs, void* buffer, SIZE_T size) {
 	RequestTmp.Target = (void*)Addrs;
 	RequestTmp.ReturnSize = 0;
 	RequestTmp.Size = size;
-
+	RequestTmp.Buffer = buffer;
 	//call driver
-	if (!DeviceIoControl(Driver, IO_READ_REQUEST, &RequestTmp, sizeof(RequestTmp), &RequestTmp, sizeof(RequestTmp), nullptr, nullptr))
+	if (!DeviceIoControl(Driver, IO_READ_REQUEST, &RequestTmp, sizeof(RequestTmp), &RequestTmp, sizeof(RequestTmp), nullptr, nullptr) || RequestTmp.ReturnSize!=size)
 		return false;
+	
+
 	return true;
 }
 
@@ -111,14 +113,14 @@ bool MemWrite(ULONG Addrs) {
 
 
 
-bool WorldToScreen(vec3 pos, vec2& screen, float matrix[16], int windowWidth, int windowHeight)
+bool WorldToScreen(vec3 pos, vec2& screen, float matrix[4][4], int windowWidth, int windowHeight)
 {
 	// Matrix-vector Product, multiplying world(eye) coordinates by projection matrix = clipCoords
 	vec4 clipCoords;
-	clipCoords.x = pos.x * matrix[0] + pos.y * matrix[4] + pos.z * matrix[8] + matrix[12];
-	clipCoords.y = pos.x * matrix[1] + pos.y * matrix[5] + pos.z * matrix[9] + matrix[13];
-	clipCoords.z = pos.x * matrix[2] + pos.y * matrix[6] + pos.z * matrix[10] + matrix[14];
-	clipCoords.w = pos.x * matrix[3] + pos.y * matrix[7] + pos.z * matrix[11] + matrix[15];
+	clipCoords.x = pos.x * matrix[0][0] + pos.y * matrix[1][0] + pos.z * matrix[2][0] + matrix[3][0];
+	clipCoords.y = pos.x * matrix[0][1] + pos.y * matrix[1][1] + pos.z * matrix[2][1] + matrix[3][1];
+	clipCoords.z = pos.x * matrix[0][2] + pos.y * matrix[1][2] + pos.z * matrix[2][2] + matrix[3][2];
+	clipCoords.w = pos.x * matrix[0][3] + pos.y * matrix[1][3] + pos.z * matrix[2][3] + matrix[3][3];
 
 	if (clipCoords.w < 0.1f)
 		return false;  // Object is behind the camera

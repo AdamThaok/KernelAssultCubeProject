@@ -26,3 +26,5 @@ NTSTATUS PsLookupProcessByProcessId(
     HANDLE ProcessId,      // Input: The process ID (PID) of the process to look up
     PEPROCESS* Process     // Output: A pointer to receive the PEPROCESS structure
 );
+
+NTSTATUS GetProcessByPid(HANDLE pid, PEPROCESS* process);

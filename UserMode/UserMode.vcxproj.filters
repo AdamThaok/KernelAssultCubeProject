@@ -26,5 +26,8 @@
     <ClInclude Include="memory.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
+    <ClInclude Include="offsets.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

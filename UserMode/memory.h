@@ -45,4 +45,4 @@ bool MemRead(ULONG Addrs, void* buffer, SIZE_T size);
 
 bool MemWrite(ULONG Addrs);
 
-bool WorldToScreen(vec3 pos, vec2& screen, float matrix[16], int windowWidth, int windowHeight);
+bool WorldToScreen(vec3 pos, vec2& screen, float matrix[4][4], int windowWidth, int windowHeight);

@@ -1,7 +1,9 @@
 // UserMode.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
+#pragma once
+#include <GL/glew.h>   // GLEW must come first to manage OpenGL extensions.
+#include <GLFW/glfw3.h>
 #include "memory.h"
+#include "offsets.h"
 
 
 
@@ -11,61 +13,102 @@ HANDLE Driver;
 Req request;
 
 
+VOID Enviroment32(PVOID &a) {
+	 a= PVOID ((ULONG)a & (ULONG)0x00000000FFFFFFFF);
+}
+
+bool CordsRange(float a[3]) {
+	if (a[0] == 0 || a[1] == 0 || a[2] == 0)
+		return false;
+	if (a[0] > 1000 || a[0] < -1000)
+		return false;
+	return true;
+}
+
+void PrintMatrix(float matrix[4][4]) {
+	printf("Matrix (4x4):\n");
+	for (int row = 0; row < 4; row++) {
+		for (int col = 0; col < 4; col++) {
+			printf("%8.2f ", matrix[row][col]);
+		}
+		printf("\n");
+	}
+}
+
+void DrawOnScreen(float a[3],float vMat[4][4]) {
+	vec3 cords;
+	vec2 screen;
+	cords.x = a[0];
+	cords.y = a[1];
+	cords.z = a[2];
+	WorldToScreen(cords, screen, vMat, 2560, 1440);
+
+}
 
 
 
 
-void DrwPlayers(HANDLE processId, PVOID baseAddress, PVOID resolvedAddress) {
-	//iterate through playerlist and print each
-	//ac_client + 0x18AC04 read
-	PVOID PlayerList = (PVOID)(ac_client + 0x18AC04);
-	//GET VIEW MATRIX
-	PVOID vMatrix;
-	MemRead((ULONG)0x0057DFD0, &vMatrix, 16 * sizeof(float));
-	if (!FindDMAAddy(processId, (PVOID)0x0057DFD0, 0, 0, &vMatrix))
-		printf("[-] failed to get vMatrix\n");
 
 
 
-	ULONG offsets[] = {0x4,0x4};
-	ULONG32 i;
-	int cnt=0;
+
+
+
+
+
+
+
+
+
+bool DrawPlayers(HANDLE processId, PVOID baseAddress, PVOID resolvedAddress) {
+
+	int cnt = 0;
 	vec2 ScreenRes;
 	vec3 Cords;
 	PVOID buffer;
-	
+	float cords[3] = { 0 };
 
-	for (i = 0x4;; i= i + 0x4) {
-		//read x 
-		offsets[0] = i;
-		offsets[1] = 0x4;
-		if (!FindDMAAddy(processId, (PVOID)PlayerList, offsets, 2, &resolvedAddress)) {
-			printf("[!] reached end of playerList with count: %d\n", cnt);
-			break;
-		}
 
-		Cords.x = *(float*)&resolvedAddress;
-		//read y
-		if ((int)Cords.x == 0)
-			break;
-		offsets[1] = 0x8;
-		FindDMAAddy(processId, (PVOID)PlayerList, offsets, 2, &resolvedAddress);
-		Cords.y = *(float*)&resolvedAddress;
-		//read z
-		offsets[1] = 0xC;
-		FindDMAAddy(processId, (PVOID)PlayerList, offsets, 2, &resolvedAddress);
-		Cords.z = *(float*)&resolvedAddress;
+	PVOID PlayerList;
 
-		
-		
-		WorldToScreen(Cords,ScreenRes,(float*)vMatrix,1440,2560);
-		printf("(%d, %d )", ScreenRes.x, ScreenRes.y);
-		Cords.x = Cords.y = Cords.z = 0;
-		cnt++;
+	float vMatrix[4][4];
+	if (!MemRead((ULONG)(off::ModuleBase + off::EntityList), &PlayerList, sizeof(PlayerList)) || !MemRead((ULONG)(off::ModuleBase + off::vMatrix), &vMatrix, sizeof(vMatrix))) {	//read vMat
+		printf("[-] Failed to get vMatrix\n");
+		return 0;
 	}
-	
+	Enviroment32(PlayerList);
 
+
+	ULONG PlayerCount = 0;
+	if (!MemRead(off::ModuleBase + off::PlayerCount, &PlayerCount, sizeof(PlayerCount))) {		//get player count
+		printf("[-] Couldnt get player count\n");
+		return 0;
+	}
+
+	ULONG  playeri=0x0;
+	ULONG temp;
+	for (ULONG PlayerStride = 0;; PlayerStride = PlayerStride + off::PlayerStride) {
+		if (cnt > (PlayerCount / 2))
+			break;
+
+		temp = (ULONG)(PlayerList)+(ULONG)PlayerStride;
+		if (!MemRead(temp, &playeri, sizeof(playeri)))  //readplayer base pointer, must derefrnce and read cords at offsets 0x4 0x8 0xc
+			printf("faul");
+		if (MemRead((ULONG)playeri + off::Align, &cords, sizeof(cords)))
+			if (CordsRange(cords)) {
+				printf("(%f ,%f ,%f)\n", cords[0], cords[1], cords[2]);
+				DrawOnScreen(cords, vMatrix);
+				cnt++;
+	}
+		Sleep(100);
+		cords[0] = cords[1] = cords[2] = 0;
+		
+	}
+
+	
 }
+
+
 
 
 
@@ -75,7 +118,7 @@ int main()
 	ac_client = 0x400000;
 	Driver = CreateFile(L"\\\\.\\AdamsDriverSymbol", GENERIC_READ | GENERIC_WRITE,0,nullptr,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,nullptr);
     
-	request.ProcessPid = (HANDLE)GetProcId(L"ac_client.exe");
+	request.ProcessPid = (HANDLE)GetProcId(off::ProcessName);
 	if (request.ProcessPid == NULL) {
 		printf("[-] Usermode: Failed to get Pid\n");
 		CloseHandle(Driver);
@@ -99,12 +142,27 @@ int main()
 	//test wether reading worked
 	PVOID BaseAddress = (void*)(ac_client + 0x18AC04);
 
-	FindDMAAddy(request.ProcessPid, BaseAddress, offsets,2, &Resolved);
 
-	void* buffer=0;
+	if (!glfwInit()) {
+		return -1;
+	}
 
-	printf("health value from kernel: %d\n", *(int*)&Resolved);
-	
+	// Create a windowed mode window and its OpenGL context
+	GLFWwindow* window = glfwCreateWindow(800, 600, "OpenGL Line", NULL, NULL);
+	if (!window) {
+		glfwTerminate();
+		return -1;
+	}
+
+	// Make the window's context current
+	glfwMakeContextCurrent(window);
+
+
+
+
+
+
+
 	DrawPlayers(request.ProcessPid, BaseAddress, &Resolved);
 
 

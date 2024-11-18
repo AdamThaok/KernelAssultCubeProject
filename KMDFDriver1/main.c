@@ -1,6 +1,7 @@
 
 #define MY_KERNEL_MODE
 #pragma once
+#include "Memory_driver.h"
 #include "C:\\Users\\adam\\source\\repos\\KernelAssultCubeProject\\KMDFDriver1\\KernelFiles.h"
 
 
@@ -27,7 +28,12 @@ NTSTATUS ProcessPowerControl(PDEVICE_OBJECT pDeviceObject, PIRP Irp) {
     UNREFERENCED_PARAMETER(pDeviceObject);
     NTSTATUS Status = STATUS_UNSUCCESSFUL;
     ULONG ByteIO = 0;
+
+
     static PEPROCESS TargetProcess;
+   
+
+
     Req* request = (Req*)(Irp->AssociatedIrp.SystemBuffer);
 
 
@@ -39,21 +45,20 @@ NTSTATUS ProcessPowerControl(PDEVICE_OBJECT pDeviceObject, PIRP Irp) {
 
 
 
-
     switch (ControlCode)
     {
     case IO_READ_REQUEST:
         //read process -> kernel
         LOG("[+] Getting a request to read!\n");
-        Status = MmCopyVirtualMemory(TargetProcess,request->Target,PsGetCurrentProcessId(),request->Buffer,request->Size,KernelMode,&request->ReturnSize);
-        ByteIO = sizeof(request);
+        Status = MmCopyVirtualMemory(TargetProcess,request->Target, PsGetCurrentProcess(),request->Buffer,request->Size, KernelMode,&request->ReturnSize);
+        ByteIO = sizeof(Req);
        
             break;
 
     case IO_WRITE_REQUEST:
         //write kernel -> process
         LOG("[+] Getting a request to write !\n");
-        Status = MmCopyVirtualMemory(PsGetCurrentProcessId(), request->Target, TargetProcess, request->Buffer, request->Size, KernelMode, &request->ReturnSize);
+        Status = MmCopyVirtualMemory(PsGetCurrentProcess(), request->Target, TargetProcess, request->Buffer, request->Size, KernelMode, &request->ReturnSize);
 
         break;
     case IO_DMA:
@@ -74,17 +79,12 @@ NTSTATUS ProcessPowerControl(PDEVICE_OBJECT pDeviceObject, PIRP Irp) {
 
        
 
-
-
-
-
-
         break;
     
     case IO_PROCESS_ATTACH:
         LOG("[+] IO Attaching to proess\n");
-        Status = PsLookupProcessByProcessId(request->ProcessPid, &TargetProcess);
-
+        Status = GetProcessByPid(request->ProcessPid, &TargetProcess);
+           
         break;
     }
 
