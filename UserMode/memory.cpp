@@ -115,35 +115,26 @@ bool MemWrite(ULONG Addrs) {
 
 bool WorldToScreen(vec3 pos, vec2& screen, float matrix[4][4], int windowWidth, int windowHeight)
 {
-	// Matrix-vector Product, multiplying world(eye) coordinates by projection matrix = clipCoords
+	// Matrix-vector Product: Multiply world coordinates by the view-projection matrix
 	vec4 clipCoords;
 	clipCoords.x = pos.x * matrix[0][0] + pos.y * matrix[1][0] + pos.z * matrix[2][0] + matrix[3][0];
 	clipCoords.y = pos.x * matrix[0][1] + pos.y * matrix[1][1] + pos.z * matrix[2][1] + matrix[3][1];
 	clipCoords.z = pos.x * matrix[0][2] + pos.y * matrix[1][2] + pos.z * matrix[2][2] + matrix[3][2];
 	clipCoords.w = pos.x * matrix[0][3] + pos.y * matrix[1][3] + pos.z * matrix[2][3] + matrix[3][3];
 
-	if (clipCoords.w < 0.1f)
-		return false;  // Object is behind the camera
+	// Check if the object is behind the camera
+	if (clipCoords.w <= 0.0f)
+		return false;
 
-	// Perspective division, dividing by clip.W = Normalized Device Coordinates (NDC)
+	// Perspective division: Transform clip coordinates to NDC
 	vec3 NDC;
 	NDC.x = clipCoords.x / clipCoords.w;
 	NDC.y = clipCoords.y / clipCoords.w;
 	NDC.z = clipCoords.z / clipCoords.w;
 
-	// Transform NDC to window coordinates
-	screen.x = (windowWidth / 2 * NDC.x) + (NDC.x + windowWidth / 2);
-	screen.y = -(windowHeight / 2 * NDC.y) + (NDC.y + windowHeight / 2);
-
-	screen.x /= 2560.0f;
-	screen.x *= 2.0f;
-	screen.x -= 1.0f;
-
-	screen.y /= 1440.0f;
-	screen.y *= 2.0f;
-	screen.y -= 1.0f;
-
-
+	// Transform NDC to window-space coordinates
+	screen.x = (NDC.x + 1.0f) * 0.5f * windowWidth;
+	screen.y = (1.0f - NDC.y) * 0.5f * windowHeight; // Flip Y-axis for screen coordinates
 
 	return true;
 }

@@ -133,11 +133,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\adam\source\repos\KMDFDriver1\SharedFiles\;C:\Users\adam\source\repos\tut\tut\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\adam\source\repos\KMDFDriver1\SharedFiles\;C:\Users\adam\source\repos\tut\tut\include;C:\Users\adam\Desktop\VSincludes\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Users\adam\Desktop\VSincludes\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;user32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
@@ -194,6 +196,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Draw.h" />
     <ClInclude Include="memory.h" />
     <ClInclude Include="offsets.h" />
   </ItemGroup>

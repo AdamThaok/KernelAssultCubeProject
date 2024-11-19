@@ -29,5 +29,8 @@
     <ClInclude Include="offsets.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
+    <ClInclude Include="Draw.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
