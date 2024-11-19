@@ -13,6 +13,7 @@ namespace off {
     constexpr uintptr_t FOV = 0x18A7CC;             // FOV [ac_client.exe + 0x18A7CC]
     constexpr uintptr_t PlayerCount = 0x18AC0C;     // PlayerCount [ac_client.exe + 0x18AC0C]
     constexpr uintptr_t vMatrix = 0x17DFD0;         // View Matrix [ac_client.exe + 0x17DFD0]
+    constexpr const wchar_t* WindowName = L"AssaultCube";         // View Matrix [ac_client.exe + 0x17DFD0]
 
 
 

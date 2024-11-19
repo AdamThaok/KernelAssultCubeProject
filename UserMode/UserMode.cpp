@@ -179,7 +179,7 @@ int main()
 
 
 	
-		RECT gameWindowRect = getGameWindowRect(L"AssaultCube");
+		RECT gameWindowRect = getGameWindowRect(off::WindowName);
 
 		// Create an overlay window that matches the size of the game window
 		GLFWwindow* overlayWindow = createOverlayWindow(2560, 1440);  // Placeholder, to be resized to match the game window
